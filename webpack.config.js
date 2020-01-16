@@ -5,7 +5,9 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/vue-book-finder/dist/',
+    publicPath: process.env.NODE_ENV === 'production'
+    ? '/vue-book-finder/'
+    : '/',
     filename: 'build.js'
   },
   module: {
