@@ -1,3 +1,6 @@
+
 module.exports = {
-publicPath: '<vue-book-finder>'
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/vue-book-finder/'
+    : '/'
 }
