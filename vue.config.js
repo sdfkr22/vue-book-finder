@@ -1,3 +1,3 @@
 module.exports = {
-publicPath: ‘<vue-book-finder>’
+publicPath: '<vue-book-finder>'
 }
