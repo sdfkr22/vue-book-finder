@@ -1,6 +1,6 @@
 # vue-book-finder
 
-> A Vue.js project
+> It helps to search a book with using Google Book API. Users need to login with their credentials before searching. Login can with 
 
 ## Build Setup
 
