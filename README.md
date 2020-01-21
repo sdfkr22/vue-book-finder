@@ -30,6 +30,7 @@ npm run build
 
 ## How can it be used?
 1. Users can login with their Google accounts or sign up with an email and password.
+(For testing you can use test@test.com / 123456)
 2. After success login, users can search any book title, author or etc.
 3. Related books will be listed.
 4. Users can click anyone to be able to see detailed information. 
