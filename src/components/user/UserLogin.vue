@@ -3,8 +3,8 @@
          <br>
          <br>
          
-      <form class="col-lg-4 mb-4" :style="isUser ? 'border-color: #337ab7;' : 'border-color: red;'">
-          <h2 class="text-center">Welcome</h2>
+      <form class="col-lg-4 mb-4" :style="isUser ? 'border-color: #0275d8;' : 'border-color: red;'">
+          <h2 class="text-center" :style="isUser ? 'color: #0275d8;' : 'color: red;'" >Welcome</h2>
           <hr>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
@@ -14,7 +14,7 @@
     <label for="exampleInputPassword1">Password</label>
     <input v-model="user.password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
   </div>
-  <p class="notMember text-muted text-center"><a href="#" @click.prevent="isUser=!isUser">{{ isUser ? 'Uye degilim' : 'Uyeligim var'}}</a></p>
+  <p class="notMember text-muted text-center"><a href="#" @click.prevent="isUser=!isUser">{{ isUser ? 'Not a member' : 'Already member'}}</a></p>
   <div class="form-group text-center">
   <button type="button" :class= "classObject" class="btn btn-block" @click="login()">{{isUser ? 'Login' : 'Sign Up'}}</button>
  </div>

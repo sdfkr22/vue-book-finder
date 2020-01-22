@@ -8,7 +8,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div id="navb" class="navbar-collapse collapse hide">
-    <ul v-if="getIsGoogleUser" class="navbar-nav">
+    <ul v-if="isAuthenticated" class="navbar-nav">
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Menu

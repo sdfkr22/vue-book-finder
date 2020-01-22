@@ -12,6 +12,11 @@
                 <div class="col-md-4">
                     <img v-if="bookData.thumbnail" :src="bookData.thumbnail" class="card-img" :alt="bookData.title">
                     <img v-else src="http://pspa.com.pl/assets/themes/consultix/images/no-image-found-360x260.png"  class="card-img" :alt="bookData.title">
+                    <br>
+                    <br>
+                    <p class="icons"  @click="isClickedAsFavorite = !isClickedAsFavorite" ><span class="fa fa-heart" :style="isClickedAsFavorite ? 'color : red;' : 'color : black;'"></span>  Add Favorites  </p>
+                    <p class="icons" @click="isClickedAsWillRead = !isClickedAsWillRead" ><span class="fa fa-book" :style="isClickedAsWillRead ? 'color : yellow;' : 'color : black;'"></span>  Will read  </p>
+                    <p class="icons" @click="isClickedAsAlreadyRead = !isClickedAsAlreadyRead" ><span class="fa fa-check-square" :style="isClickedAsAlreadyRead ? 'color : green;' : 'color : black;'"></span>  Already Read  </p>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -46,8 +51,8 @@
                       <hr>
                       <p><small class="text-muted">{{bookData.publisher}} / {{bookData.publishedDate}}</small></p>
                       <hr>
-                      <p><a :href="bookData.previewLink">Click for preview of book</a></p>
-                      <p><a :href="bookData.infoLink">Click for the more information</a></p>
+                      <p><a :href="bookData.previewLink" target="_blank">Click for preview of book</a></p>
+                      <p><a :href="bookData.infoLink" target="_blank">Click for the more information</a></p>
 
                     </div>
                 </div>
@@ -68,6 +73,9 @@ export default {
     data(){
     return{
       isoLangs,
+      isClickedAsFavorite : false,
+      isClickedAsAlreadyRead: false,
+      isClickedAsWillRead: false,
     }
   },
 
@@ -125,5 +133,14 @@ export default {
 
 .nothing{
     font-family: 'Raleway Dots', cursive;
+}
+
+.icons{
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.icons :hover{
+
 }
 </style>
