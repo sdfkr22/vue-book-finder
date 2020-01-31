@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import store from './store'
 import {router} from './routes'
+import babelPolyfill from 'babel-polyfill'
 
 
 
@@ -21,5 +22,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  babelPolyfill,
   render: h => h(App)
 })

@@ -14,7 +14,11 @@ const store = new Vuex.Store({
       isGoogleUser: false,
       userID:"",
       expiresIn:"",
-      googleUser:null
+      googleUser:null,
+      favorites: false,
+      willRead:false,
+      alreadyRead:false,
+      bookKeyForDeletion: "",
     },
     getters : {
         getUserName(state){
@@ -34,7 +38,11 @@ const store = new Vuex.Store({
         },
         getExpiresIn(state){
             return state.expiresIn;
-        }
+        },
+        getFavorites(state){
+            return state.favorites;
+        },
+
     },
     mutations: {
       setToken(state, token){
@@ -57,7 +65,23 @@ const store = new Vuex.Store({
       },
       setExpiresIn(state, expiresIn){
         state.expiresIn = expiresIn;
+      },
+      setFavorites(state, value){
+          state.favorites = value;
+      },
+      setWillRead(state, value){
+        state.willRead = value;
+    },
+    setAlreadyRead(state, value){
+        state.alreadyRead = value;
+    },
+      setBookKeyForDeletion(state, key){
+          state.bookKeyForDeletion = key;
+      },
+      clearBookKey(state){
+          state.bookKeyForDeletion = '';
       }
+      
     },
     actions : {
         initAuth({commit, dispatch}){
@@ -89,23 +113,26 @@ const store = new Vuex.Store({
                 }
         
         },
-        login({commit, dispatch, state}, authData){
+        async login({commit, dispatch, state}, authData){
                 let authLink = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
 
                 if(authData.isUser)
                     authLink = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
 
            
-                axios.post(authLink+"AIzaSyAAGkgcn6EJDqWy8r2l60YxghUklXsfg8A",
-                        {email: authData.email, password: authData.password,returnSecureToken : true}).then(response =>{
-                    commit('setToken', response.data.idToken);
-                    commit('setExpiresIn', +response.data.expiresIn*1000);
-                    dispatch("setTimeoutTimer",state.expiresIn);
-                    localStorage.setItem("token",state.token);
-                    localStorage.setItem("expirationDate", new Date().getTime() + state.expiresIn)
-                    router.replace("/").catch(error=>{
-                        console.log("push error " +error);
-                    })
+                await axios.post(authLink+"AIzaSyAAGkgcn6EJDqWy8r2l60YxghUklXsfg8A",
+                        {email: authData.email, password: authData.password,returnSecureToken : true}).
+                        then(response =>{
+                            localStorage.setItem("userID",response.data.localId);
+                            //commit('setUserID', response.data.localId);
+                            commit('setToken', response.data.idToken);
+                            commit('setExpiresIn', +response.data.expiresIn*1000);
+                            dispatch("setTimeoutTimer",state.expiresIn);
+                            localStorage.setItem("token",state.token);
+                            localStorage.setItem("expirationDate", new Date().getTime() + state.expiresIn)
+                            router.replace("/").catch(error=>{
+                                console.log("push error " +error);
+                            })
                 })
 
            
@@ -123,6 +150,7 @@ const store = new Vuex.Store({
                     commit("clearToken")
                     localStorage.removeItem("token");
                     localStorage.removeItem("expirationDate");
+                    localStorage.removeItem("userID");
                     router.push('/login').catch(error=>{
                         console.log("logout error " +error);
                     })
@@ -132,6 +160,7 @@ const store = new Vuex.Store({
                 commit("clearToken")
                 localStorage.removeItem("token");
                 localStorage.removeItem("expirationDate");
+                localStorage.removeItem("userID");
                 router.push('/login').catch(error=>{
                     console.log("logout error " +error);
                 })
@@ -145,7 +174,102 @@ const store = new Vuex.Store({
                 console.log("expires : "+expiresIn)
                 dispatch("logout");
             },expiresIn)
-        }
+        },
+
+        async getDB({commit, dispatch, state}, id){
+            await axios({
+                method: 'get',
+                //url: 'https://vue-book-finder.firebaseio.com/books.json?auth=' + state.token + '&orderBy="bookID"&equalTo="' + bookData.id+ '"',
+                url: 'https://vue-book-finder.firebaseio.com/books.json?orderBy="bookID"&equalTo="' + id+ '"&orderBy="userID"&equalTo="' + localStorage.getItem("userID"),
+               
+              }).then((response) =>{
+                console.log("checkIfBookExist");
+                console.log(response);
+                console.log(response.data);
+                if(Object.keys(response.data).length){
+                    console.log("response.data dolu")
+                    console.log("response.data.key")
+                    let booksKey="";
+                    for(let key in response.data){
+                        console.log("key : " + key);
+                        booksKey=key;
+                    }
+                    commit("setBookKeyForDeletion",booksKey);
+
+                    commit("setFavorites", response.data[booksKey].favorite);
+                    commit("setWillRead", response.data[booksKey].willRead);
+                    commit("setAlreadyRead", response.data[booksKey].alreadyRead);
+
+                }else{
+                    commit("setFavorites", false);
+                    commit("setWillRead", false);
+                    commit("setAlreadyRead", false);
+                }
+              });
+        },
+        async addToDB({commit, dispatch, state}, bookData){
+            console.log("user id : "+localStorage.getItem("userID"));
+            await axios({
+                method: 'post',
+                url: 'https://vue-book-finder.firebaseio.com/books.json',
+                data: {
+                    userID : localStorage.getItem("userID"),
+                    bookID : bookData.id,
+                    bookTitle : bookData.title,
+                    authors : bookData.authors,
+                    imageLink : bookData.thumbnail,
+                    favorite : bookData.favorite,
+                    willRead : bookData.willRead,
+                    alreadyRead : bookData.alreadyRead,
+                }
+              })
+              .then((response) =>{
+                console.log("successfully sent to firebase");
+                console.log(response);
+                
+              });
+        },
+
+        async updateDB({commit, dispatch, state}, bookData){
+            
+            console.log("update db");
+            console.log("user id : "+state.userID);
+            await axios({
+                method: 'put',
+                url: 'https://vue-book-finder.firebaseio.com/books/'+state.bookKeyForDeletion+'.json',
+                data: {
+                    userID : localStorage.getItem("userID"),
+                    bookID : bookData.id,
+                    bookTitle : bookData.title,
+                    authors : bookData.authors,
+                    imageLink : bookData.thumbnail,
+                    favorite : bookData.favorite,
+                    willRead : bookData.willRead,
+                    alreadyRead : bookData.alreadyRead,
+                }
+              })
+              .then((response) =>{
+                console.log("successfully sent to firebase");
+                console.log(response);
+                
+              });
+        },
+
+        async removeFromDB({commit, dispatch, state},key){
+            await axios({
+                method: 'delete',
+                url: 'https://vue-book-finder.firebaseio.com/books/'+(key ? key :state.bookKeyForDeletion)+'.json',
+                
+              }).then((response) =>{
+                console.log("successfully deleted from firebase");
+                console.log(response);
+                commit("clearBookKey");
+                commit("setFavorites",false);
+                commit("setWillRead", false);
+                commit("setAlreadyRead", false);
+              });
+        },
+        
     },
    
   })

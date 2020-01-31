@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <div class="card mb-3" style="max-width: 540px; background-color:#ECEFEF">
+        <div class="card mb-3" style="max-width: 540px; background-color:#FFFAFA">
             <div class="row no-gutters" data-toggle="modal" data-target="#exampleModal" @click="sendBook(book)" style="margin:10px">
                 <div class="col-md-4">
                     <img v-if="book.volumeInfo.imageLinks" :src="book.volumeInfo.imageLinks.thumbnail" class="card-img" :alt="book.volumeInfo.title">
@@ -8,12 +8,15 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">{{book.volumeInfo.title}}</h5>
-                        <div v-for="author in book.volumeInfo.authors" v-bind:key="author">
-                           <p class="card-text">- {{author}}</p>
+                        <h6 class="card-title">{{book.volumeInfo.title}}</h6>
+                        <br>
+                        <div v-if="book.volumeInfo.authors">
+                            <div v-for="author in book.volumeInfo.authors" v-bind:key="author">
+                                <p class="card-text" style="font-style: italic;">{{author}}</p>
+                            </div>
+                            <br>
                         </div>
-                        
-                        <p class="card-text"><small class="text-muted">Published Date: {{book.volumeInfo.publishedDate}}</small></p>
+                        <p v-if="book.volumeInfo.publishedDate" class="card-text"><small class="text-muted">Published Date: {{book.volumeInfo.publishedDate}}</small></p>
                     </div>
                 </div>
             </div>
@@ -29,6 +32,7 @@ export default {
         return{
             isDetailed:false,
             selectedBook : {
+                id:"",
                 title:"",
                 subtitle:"",
                 authors:"",
@@ -43,6 +47,9 @@ export default {
                 publisher:"",
                 previewLink:"",
                 language:"",
+                favorite:false,
+                willRead:false,
+                alreadyRead:false,
 
             },
         }
@@ -59,6 +66,7 @@ export default {
     },
     methods : {
         sendBook(book){
+            this.selectedBook.id = book.id;
             this.selectedBook.title = book.volumeInfo.title;
             this.selectedBook.subtitle = book.volumeInfo.subtitle;
             this.selectedBook.authors = book.volumeInfo.authors;
@@ -82,13 +90,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 img{
     padding: 10px;
 }
 .no-gutters{
     cursor: pointer;
+}
+.row{
+    padding: 5px;
+}
+.card-body{
+    margin: 0px 0px 5px 8px;
+    padding: 1px;
 }
 
 </style>

@@ -53,7 +53,8 @@ export default {
             const profile = user.getBasicProfile()
             this.$store.commit("setGoogleUser", true);
             this.$store.commit('setUserName', profile.getName());
-            this.$store.commit('setUserID', profile.getId());
+            localStorage.setItem("userID",profile.getId());
+            console.log("userid : "+profile.getId())
 
             user.reloadAuthResponse().then((AuthResponse )=>{
                 this.$store.commit('setExpiresIn', +AuthResponse.expires_in*1000);
@@ -66,7 +67,9 @@ export default {
             
         },
         login(){
-            this.$store.dispatch("login",{...this.user, isUser : this.isUser})
+            this.$store.dispatch("login",{...this.user, isUser : this.isUser}).then(()=>{
+                console.log("Login Successful");
+            })
         },
         
     },

@@ -7,7 +7,7 @@
      <h1 class="display-4 text-center">Book Finder</h1>
     <br>
     <div class="input-group mb-3">
-      <input type="text" v-model="searchKey" class="form-control" placeholder="Enter book title, author" aria-label="Recipient's username" aria-describedby="button-addon2">
+      <input type="text" v-model="searchKey" class="form-control" @keyup.enter="search" placeholder="Enter book title, author" aria-label="Recipient's username" aria-describedby="button-addon2">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="search">Search</button>
       </div>
@@ -20,12 +20,15 @@
 </div>
 
 <div class="row">
-  <app-book-card @data="childData = $event" class="col-lg-3" v-for="book in bookList" :key="book.id" :book="book"/>
+  <app-book-card @data="childData = $event" class="col-lg-3" v-for="book in bookList" :key="book.id" :book="book" @click.native="checkBookData"/>
   
   </div>
 
 <!-- Modal -->
-  <app-modal :bookData="childData"></app-modal>
+
+  <app-modal  v-if="childData!=''"  :bookData="childData" ></app-modal>
+
+  
   
    
   </div>
@@ -145,7 +148,21 @@ export default {
     },
     combine(string){
       return string.split(' ').join('+');
-    }
+    },
+    checkBookData(){
+      console.log("in checkBookData");
+      this.$store.dispatch("getDB", this.childData.id).then(() => {
+        this.childData.favorite = this.$store.state.favorites;
+         console.log("this.$store.state.favorites : "+this.$store.state.favorites);
+        console.log("this.childData.favorite : "+this.childData.favorite);
+        this.childData.willRead = this.$store.state.willRead;
+        console.log("this.childData.willRead : "+this.childData.willRead);
+        this.childData.alreadyRead = this.$store.state.alreadyRead;
+        console.log("this.childData.alreadyRead : "+this.childData.alreadyRead);
+      });
+
+
+    },
   }
 }
 </script>
