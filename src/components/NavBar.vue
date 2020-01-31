@@ -8,30 +8,6 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div id="navb" class="navbar-collapse collapse hide">
-    <ul v-if="isAuthenticated" class="navbar-nav">
-        <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Menu
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <router-link 
-            to="/"
-            class="dropdown-item">
-            <a class="dropdown-item">My Favorite Books</a>
-        </router-link>
-        <router-link 
-            to="/"
-            class="dropdown-item">
-            <a class="dropdown-item">Will Read</a>
-        </router-link>
-        <router-link 
-            to="/"
-            class="dropdown-item">
-            <a class="dropdown-item">Already Read</a>
-        </router-link>
-        </div>
-      </li>
-    </ul>
 
     <ul class="nav navbar-nav ml-auto">
          <router-link 
@@ -49,7 +25,7 @@
             <a class="nav-link"> My Profile </a>
         </router-link>
          <li 
-            v-if="isAuthenticated"
+           v-if="isAuthenticated"
             class="nav-item">
             <a @click.prevent="logout" class="nav-link"><font-awesome-icon icon="sign-in-alt"/> Log Out</a>
         </li>

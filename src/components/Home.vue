@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <br>
     <br>
     <p v-if="getUserName">Welcome {{getUserName}}</p>

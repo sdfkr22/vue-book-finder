@@ -234,15 +234,11 @@ const store = new Vuex.Store({
             
             console.log("update db");
             console.log("user id : "+state.userID);
+            console.log(bookData);
             await axios({
-                method: 'put',
+                method: 'patch',
                 url: 'https://vue-book-finder.firebaseio.com/books/'+state.bookKeyForDeletion+'.json',
                 data: {
-                    userID : localStorage.getItem("userID"),
-                    bookID : bookData.id,
-                    bookTitle : bookData.title,
-                    authors : bookData.authors,
-                    imageLink : bookData.thumbnail,
                     favorite : bookData.favorite,
                     willRead : bookData.willRead,
                     alreadyRead : bookData.alreadyRead,

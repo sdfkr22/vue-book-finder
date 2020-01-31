@@ -20,8 +20,8 @@
  </div>
 
   <div class="form-group text-center">
-      <div id="google-signin-btn" data-onsuccess="onSignIn"></div>
- <!-- <button type="button" class="g-signin2 btn btn-primary btn-block"  @click="login(true)">Login with Google Account</button>-->
+   <div id="google-signin-btn" data-onsuccess="onSignIn"></div>
+   <!-- <button type="button" id="google-signin-btn" class="g-signin2 btn btn-primary btn-block" data-onsuccess="onSignIn">Login with Google Account</button>-->
    </div>
   
 </form>
@@ -55,6 +55,7 @@ export default {
             this.$store.commit('setUserName', profile.getName());
             localStorage.setItem("userID",profile.getId());
             console.log("userid : "+profile.getId())
+            console.log("isGoogleUser : "+this.$store.state.isGoogleUser)
 
             user.reloadAuthResponse().then((AuthResponse )=>{
                 this.$store.commit('setExpiresIn', +AuthResponse.expires_in*1000);
