@@ -34,6 +34,8 @@ npm run build
 2. After success login, users can search any book title, author or etc.
 3. Related books will be listed.
 4. Users can click anyone to be able to see detailed information. 
+5. Users can use add favorites/will read/alread read icons to save their books to profiles.
+6. Usesr can list their books in My profile section.
  
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
