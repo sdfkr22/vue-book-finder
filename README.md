@@ -35,7 +35,7 @@ npm run build
 3. Related books will be listed.
 4. Users can click anyone to be able to see detailed information. 
 5. Users can use add favorites/will read/alread read icons to save their books to profiles.
-6. Usesr can list their books in My profile section.
+6. Users can list their books in My profile section.
  
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
